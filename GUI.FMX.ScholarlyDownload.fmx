@@ -1,0 +1,130 @@
+object MainForm: TMainForm
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 766
+  ClientWidth = 826
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  DesignerMasterStyle = 0
+  object rctngl1: TRectangle
+    Align = Left
+    Size.Width = 225.000000000000000000
+    Size.Height = 766.000000000000000000
+    Size.PlatformDefault = False
+    object CornerButton_Close: TCornerButton
+      Position.X = 24.000000000000000000
+      Position.Y = 408.000000000000000000
+      Sides = [Top, Left, Bottom, Right]
+      Size.Width = 169.000000000000000000
+      Size.Height = 41.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Close'
+      XRadius = 3.000000000000000000
+      YRadius = 3.000000000000000000
+    end
+    object CornerButton_Download: TCornerButton
+      Position.X = 24.000000000000000000
+      Position.Y = 80.000000000000000000
+      Sides = [Top, Left, Bottom, Right]
+      Size.Width = 169.000000000000000000
+      Size.Height = 49.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Scholary Download'
+      XRadius = 3.000000000000000000
+      YRadius = 3.000000000000000000
+      OnClick = CornerButton_DownloadClick
+    end
+    object chk_exportasJSON: TCheckBox
+      Position.X = 40.000000000000000000
+      Position.Y = 240.000000000000000000
+      TabOrder = 2
+      Text = 'chk_exportasJSON'
+    end
+    object chk_exportasBIBTEX: TCheckBox
+      Position.X = 40.000000000000000000
+      Position.Y = 288.000000000000000000
+      Size.Width = 153.000000000000000000
+      Size.Height = 19.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Text = 'chk_exportasBIBTEX'
+    end
+    object chk_exportasCSV: TCheckBox
+      Position.X = 40.000000000000000000
+      Position.Y = 323.000000000000000000
+      Size.Width = 153.000000000000000000
+      Size.Height = 19.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 19
+      Text = 'chk_exportasCSV'
+    end
+    object Edit1: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 20
+      Position.X = 24.000000000000000000
+      Position.Y = 176.000000000000000000
+      Size.Width = 169.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+  end
+  object pnl1: TPanel
+    Align = Client
+    Size.Width = 601.000000000000000000
+    Size.Height = 766.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    object mmo_QueryResults: TMemo
+      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+      DataDetectorTypes = []
+      Align = Bottom
+      Position.Y = 494.000000000000000000
+      Size.Width = 601.000000000000000000
+      Size.Height = 272.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Viewport.Width = 597.000000000000000000
+      Viewport.Height = 268.000000000000000000
+    end
+    object mmo_QueryKeyWords: TMemo
+      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+      DataDetectorTypes = []
+      Lines.Strings = (
+        'Circuit Reverse Engineering ')
+      Align = Top
+      Margins.Top = 30.000000000000000000
+      Position.Y = 30.000000000000000000
+      Size.Width = 601.000000000000000000
+      Size.Height = 57.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Viewport.Width = 597.000000000000000000
+      Viewport.Height = 53.000000000000000000
+    end
+    object lbl1_SearchKeywords: TLabel
+      Position.X = 8.000000000000000000
+      Position.Y = 8.000000000000000000
+      Text = 'Search Keywords'
+      TabOrder = 4
+    end
+    object StringGrid1: TStringGrid
+      Align = Client
+      CanFocus = True
+      ClipChildren = True
+      Margins.Top = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Size.Width = 601.000000000000000000
+      Size.Height = 397.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 5
+      Viewport.Width = 597.000000000000000000
+      Viewport.Height = 372.000000000000000000
+    end
+  end
+end
