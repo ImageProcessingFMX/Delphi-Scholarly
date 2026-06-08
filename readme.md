@@ -40,7 +40,7 @@ Delphi FMX application to download scientific paper metadata via the **OpenAlex 
 
 ## Requirements
 
-- Embarcadero Delphi 11 (or compatible)
+- Embarcadero Delphi 12 (or compatible)
 - FMX framework enabled
 - Network access to `https://api.openalex.org`
 
@@ -54,17 +54,17 @@ The client builds a Works endpoint URL like:
 `/works?search=...&per-page=...&page=...&mailto=...` (optional) [2]
 
 ### 2) Download + Parse Results
-The app downloads JSON pages and parses `results[]` into `TPaperRecord` entries [2].
+The app downloads JSON pages and parses `results[]` into `TPaperRecord` entries.
 
 ### 3) Show Results
-Results are displayed in the FMX UI and can be loaded into a `TStringGrid` [3].
-The helper can create columns dynamically and fill rows from a `TList<record>` using RTTI [5].
+Results are displayed in the FMX UI and can be loaded into a `TStringGrid`.
+The helper can create columns dynamically and fill rows from a `TList<record>` using RTTI 
 
 ### 4) Export Results
-The UI has checkboxes for exporting formats (`chk_exportasJSON`, `chk_exportasBIBTEX`, `chk_exportasCSV`) [4].
+The UI has checkboxes for exporting formats (`chk_exportasJSON`, `chk_exportasBIBTEX`, `chk_exportasCSV`) .
 Programmatically you can export using:
 
-- `TScholarly.SavePaperListToCSV(...)` [3]
+- `TScholarly.SavePaperListToCSV(...)` 
 - `TScholarly.SavePaperListToJSON(...)`
 - `TScholarly.SavePaperListToBIB(...)`
 
@@ -72,10 +72,10 @@ Programmatically you can export using:
 
 ## Usage (UI)
 
-1. Enter your search keywords in the query memo (`mmo_QueryKeyWords`) [3]
+1. Enter your search keywords in the query memo (`mmo_QueryKeyWords`) 
 2. Click **Download**
-3. Select export checkboxes as needed [4]
-4. Export files are written to the configured path (example shown uses `c:\temp\papers.csv`) [3]
+3. Select export checkboxes as needed
+4. Export files are written to the configured path (example shown uses `c:\temp\papers.csv`) 
 
 ---
 
