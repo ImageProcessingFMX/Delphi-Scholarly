@@ -8,33 +8,33 @@ Delphi FMX application to download scientific paper metadata via the **OpenAlex 
 
 ## Features
 
-- Download papers from OpenAlex using keyword search (paged) [2]
+- Download papers from OpenAlex using keyword search (paged) 
 - Fields extracted per paper:
-  - `title`, `authors`, `publication_year`, `abstract`, `cited_by_count`, `doi`, `url` [2]
-- Display results in FMX UI (`TMemo` + `TStringGrid`) [3]
+  - `title`, `authors`, `publication_year`, `abstract`, `cited_by_count`, `doi`, `url` 
+- Display results in FMX UI (`TMemo` + `TStringGrid`) 
 - Export formats (checkbox-driven in UI):
   - CSV
   - JSON
   - BibTeX [4]
 - Sorting support inside `TPaperList`:
-  - sort by title, authors, year, citations [2]
+  - sort by title, authors, year, citations 
 - `TStringGrid` helper for:
   - dynamic columns + row fill from generic record list
-  - auto column sizing using text layout [5]
+  - auto column sizing using text layout 
 
 ---
 
 ## Project Structure
 
-- `Scholarly.dproj` — Delphi project file (FMX Application) [1]
+- `Scholarly.dproj` — Delphi project file (FMX Application) 
 - `Unit_TScholarly.pas`
-  - `TScholarly`: OpenAlex client + download logic [2]
+  - `TScholarly`: OpenAlex client + download logic 
   - `TPaperRecord`: paper metadata record
-  - `TPaperList`: list container + sorting + export [2]
+  - `TPaperList`: list container + sorting + export 
 - `Unit_StringGridHelper.pas`
-  - `TStringGridHelper`: autosize columns + load from list [5]
+  - `TStringGridHelper`: autosize columns + load from list 
 - `GUI.FMX.ScholarlyDownload.pas/.fmx`
-  - FMX main UI form, download button, query memo, results memo, stringgrid, export checkboxes [3][4]
+  - FMX main UI form, download button, query memo, results memo, stringgrid, export checkboxes 
 
 ---
 
@@ -51,7 +51,7 @@ Delphi FMX application to download scientific paper metadata via the **OpenAlex 
 ### 1) Build OpenAlex URL
 The client builds a Works endpoint URL like:
 
-`/works?search=...&per-page=...&page=...&mailto=...` (optional) [2]
+`/works?search=...&per-page=...&page=...&mailto=...` (optional) 
 
 ### 2) Download + Parse Results
 The app downloads JSON pages and parses `results[]` into `TPaperRecord` entries.
@@ -92,8 +92,8 @@ begin
     // optional but recommended:
     // S.MailTo := 'you@domain.com';
 
-    S.DownloadPapers('graph neural networks', 1000, 200, 300);  // max, per-page, delay [3]
-    S.SavePaperListToCSV('c:\temp\papers.csv');                 // export [3]
+    S.DownloadPapers('graph neural networks', 1000, 200, 300);  // max, per-page, delay 
+    S.SavePaperListToCSV('c:\temp\papers.csv');                 // export 
   finally
     S.Free;
   end;
