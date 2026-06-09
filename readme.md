@@ -92,7 +92,7 @@ begin
     // optional but recommended:
     // S.MailTo := 'you@domain.com';
 
-    S.DownloadPapers('graph neural networks', 1000, 200, 300);  // max, per-page, delay 
+    S.DownloadPapers('graph neural networks', 150, 200, 300);  // max, per-page, delay 
     S.SavePaperListToCSV('c:\temp\papers.csv');                 // export 
   finally
     S.Free;
