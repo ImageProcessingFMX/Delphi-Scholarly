@@ -3,162 +3,161 @@ unit Unit_StringGridHelper;
 interface
 
 uses
-  System.SysUtils, System.Classes, System.Generics.Collections, System.JSON, System.IOUtils,
-  System.Rtti, FMX.Grid, FMX.Types, FMX.TextLayout,  FMX.Graphics, FMX.StdCtrls, System.TypInfo;
+  System.SysUtils, System.Classes, System.Generics.Collections, System.JSON,
+  System.IOUtils, System.Rtti, FMX.Grid, FMX.Types, FMX.TextLayout,
+  FMX.Graphics, FMX.StdCtrls, System.TypInfo;
 
 type
   TStringGridHelper = class helper for TStringGrid
   public
-    procedure AutoSizeColumns(MaxWidth: Single = 400);
-    procedure AutoSizeToContent;
-    procedure FitToForm(FormWidth, FormHeight: Single; Margin: Single = 10);
-    procedure LoadFromList<T: record>(List: TList<T>; IncludeHeaders: Boolean = True);
+    // VCL-like API
+    procedure SetColCount(const ACount: Integer);
+    procedure SetRowCount(const ACount: Integer);
+    procedure SetCell(const ACol, ARow: Integer; const AText: string);
+    function GetCell(const ACol, ARow: Integer): string;
+
+    // Safe grid reset for multi-run usage
+    procedure ClearColumnsSafe;
+    procedure ClearGrid;
+
+    // loader   for TList <Record>
+    procedure LoadFromList<T: record >(List: TList<T>;
+      IncludeHeaders: Boolean = True);
   end;
 
 implementation
 
 { TStringGridHelper }
 
-procedure TStringGridHelper.AutoSizeColumns(MaxWidth: Single = 400);
-var
-  Col, Row: Integer;
-  MaxLen, TextWidth: Single;
-  Layout: TTextLayout;
-begin
-  Layout := TTextLayoutManager.DefaultTextLayout.Create;
-  try
-    for Col := 0 to ColumnCount - 1 do
-    begin
-      MaxLen := 50; // Minimum width
-
-      // Check header
-      if Assigned(Columns[Col]) then
-      begin
-        Layout.BeginUpdate;
-        try
-          Layout.Text := Columns[Col].Header;
-          TextWidth := Layout.TextWidth;
-        finally
-          Layout.EndUpdate;
-        end;
-
-        if TextWidth > MaxLen then
-          MaxLen := TextWidth;
-      end;
-
-      // Check all rows
-      for Row := 0 to RowCount - 1 do
-      begin
-        Layout.BeginUpdate;
-        try
-          Layout.Text := Cells[Col, Row];
-          TextWidth := Layout.TextWidth;
-        finally
-          Layout.EndUpdate;
-        end;
-
-        if TextWidth > MaxLen then
-          MaxLen := TextWidth;
-      end;
-
-      // Add padding and limit to max width
-      MaxLen := MaxLen + 20;
-      if MaxLen > MaxWidth then
-        MaxLen := MaxWidth;
-
-      Columns[Col].Width := MaxLen;
-    end;
-  finally
-    Layout.Free;
-  end;
-end;
-
-procedure TStringGridHelper.AutoSizeToContent;
-var
-  TotalWidth: Single;
-  Col: Integer;
-begin
-  AutoSizeColumns;
-
-  TotalWidth := 0;
-  for Col := 0 to ColumnCount - 1 do
-    TotalWidth := TotalWidth + Columns[Col].Width;
-
-  Width := TotalWidth + 20; // Add scrollbar width
-end;
-
-procedure TStringGridHelper.FitToForm(FormWidth, FormHeight: Single; Margin: Single = 10);
-begin
-  Width := FormWidth - Position.X - Margin;
-  Height := FormHeight - Position.Y - Margin;
-end;
-
-procedure TStringGridHelper.LoadFromList<T>(List: TList<T>; IncludeHeaders: Boolean = True);
+procedure TStringGridHelper.LoadFromList<T>(List: TList<T>;
+  IncludeHeaders: Boolean = True);
 var
   RttiContext: TRttiContext;
   RttiType: TRttiType;
   Fields: TArray<TRttiField>;
-  I, Row, Col: Integer;
+  Row, Col: Integer;
   Item: T;
-  Value: TValue;
-  Column: TColumn;
+  V: TValue;
+  HeaderRowOffset: Integer;
 begin
-  if List.Count = 0 then Exit;
 
-  RttiContext := TRttiContext.Create;
+  ClearGrid;
+
+  BeginUpdate;
   try
-    RttiType := RttiContext.GetType(TypeInfo(T));
-    Fields := RttiType.GetFields;
+    // Make it safe to call multiple times:
 
-    // Clear existing columns
-    while ColumnCount > 0 do
-      Columns[0].Free;
+    if (List = nil) or (List.Count = 0) then
+      Exit;
 
-    // Add columns dynamically
-    for Col := 0 to Length(Fields) - 1 do
-    begin
-      Column := TStringColumn.Create(Self);
-      Column.Parent := Self;
+    RttiContext := TRttiContext.Create;
+    try
+      RttiType := RttiContext.GetType(TypeInfo(T));
+      Fields := RttiType.GetFields; // you currently use fields [4]
+      if Length(Fields) = 0 then
+        Exit;
 
+      // Create columns (VCL-like)
+      SetColCount(Length(Fields));
+
+      // Optional headers
+      HeaderRowOffset := 0;
       if IncludeHeaders then
-        Column.Header := Fields[Col].Name
-      else
-        Column.Header := '';
-
-      Column.Width := 100; // Default width
-    end;
-
-    // Set row count (this works in FMX)
-    RowCount := List.Count;
-
-    // Fill data
-    for I := 0 to List.Count - 1 do
-    begin
-      Item := List[I];
-      Row := I;
-
-      for Col := 0 to Length(Fields) - 1 do
       begin
-        Value := Fields[Col].GetValue(@Item);
+        HeaderRowOffset := 1;
+        SetRowCount(List.Count + 1); // header + data
+        for Col := 0 to High(Fields) do
+          SetCell(Col, 0, Fields[Col].Name);
+      end
+      else
+        SetRowCount(List.Count);
 
-        case Value.Kind of
-          tkInteger, tkInt64:
-            Cells[Col, Row] := IntToStr(Value.AsInteger);
-          tkFloat:
-            Cells[Col, Row] := FloatToStr(Value.AsExtended);
-          tkString, tkLString, tkWString, tkUString:
-            Cells[Col, Row] := Value.AsString;
-          else
-            Cells[Col, Row] := Value.ToString;
+      // Fill data
+      for Row := 0 to List.Count - 1 do
+      begin
+        Item := List[Row];
+        for Col := 0 to High(Fields) do
+        begin
+          V := Fields[Col].GetValue(@Item);
+          SetCell(Col, Row + HeaderRowOffset, V.ToString);
         end;
       end;
+
+    finally
+      // (TRttiContext is a record; no Free needed)
     end;
 
-    // Auto-size columns after loading
-    AutoSizeColumns;
-
   finally
-    RttiContext.Free;
+    EndUpdate;
+  end;
+end;
+
+procedure TStringGridHelper.SetColCount(const ACount: Integer);
+var
+  I: Integer;
+  Col: TColumn;
+begin
+  if ACount < 0 then
+    Exit;
+
+  BeginUpdate;
+  try
+    // shrink
+    while ColumnCount > ACount do
+      Columns[ColumnCount - 1].DisposeOf;
+
+    // grow
+    for I := ColumnCount to ACount - 1 do
+    begin
+      Col := TColumn.Create(Self);
+      Col.Parent := Self;
+      Col.Header := ''; // FMX column title
+      Col.Width := 120;
+    end;
+  finally
+    EndUpdate;
+  end;
+end;
+
+procedure TStringGridHelper.SetRowCount(const ACount: Integer);
+begin
+  // FMX has RowCount like VCL
+  RowCount := ACount;
+end;
+
+procedure TStringGridHelper.SetCell(const ACol, ARow: Integer;
+  const AText: string);
+begin
+  Cells[ACol, ARow] := AText;
+end;
+
+function TStringGridHelper.GetCell(const ACol, ARow: Integer): string;
+begin
+  Result := Cells[ACol, ARow];
+end;
+
+procedure TStringGridHelper.ClearColumnsSafe;
+var
+  I: Integer;
+begin
+  // IMPORTANT: dispose from last to first to avoid index shifting problems
+  for I := ColumnCount - 1 downto 0 do
+    // Columns[i].DisposeOf;
+    Self.RemoveObject(Columns[I])
+
+end;
+
+procedure TStringGridHelper.ClearGrid;
+begin
+  BeginUpdate;
+  try
+    // Clear cell data first
+    RowCount := 0;
+
+    // Then clear columns safely
+    ClearColumnsSafe;
+  finally
+    EndUpdate;
   end;
 end;
 

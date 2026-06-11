@@ -1,9 +1,9 @@
 object MainForm: TMainForm
   Left = 0
   Top = 0
-  Caption = 'Form1'
+  Caption = 'Literature Search via  OpenAlex'
   ClientHeight = 766
-  ClientWidth = 826
+  ClientWidth = 998
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
@@ -17,7 +17,7 @@ object MainForm: TMainForm
     Size.PlatformDefault = False
     object CornerButton_Close: TCornerButton
       Position.X = 24.000000000000000000
-      Position.Y = 408.000000000000000000
+      Position.Y = 678.000000000000000000
       Sides = [Top, Left, Bottom, Right]
       Size.Width = 169.000000000000000000
       Size.Height = 41.000000000000000000
@@ -44,16 +44,16 @@ object MainForm: TMainForm
       Position.X = 40.000000000000000000
       Position.Y = 240.000000000000000000
       TabOrder = 2
-      Text = 'chk_exportasJSON'
+      Text = 'export as JSON'
     end
     object chk_exportasBIBTEX: TCheckBox
       Position.X = 40.000000000000000000
-      Position.Y = 288.000000000000000000
+      Position.Y = 280.000000000000000000
       Size.Width = 153.000000000000000000
       Size.Height = 19.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 3
-      Text = 'chk_exportasBIBTEX'
+      Text = 'export as BIBTEX'
     end
     object chk_exportasCSV: TCheckBox
       Position.X = 40.000000000000000000
@@ -62,21 +62,71 @@ object MainForm: TMainForm
       Size.Height = 19.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 19
-      Text = 'chk_exportasCSV'
+      Text = 'export as CSV'
     end
-    object Edit1: TEdit
+    object EditFilename: TEdit
       Touch.InteractiveGestures = [LongTap, DoubleTap]
       TabOrder = 20
+      Text = 'c:\temp\papers.csv'
       Position.X = 24.000000000000000000
       Position.Y = 176.000000000000000000
       Size.Width = 169.000000000000000000
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False
     end
+    object ComboBox_FilterResults: TComboBox
+      Position.X = 24.000000000000000000
+      Position.Y = 432.000000000000000000
+      Size.Width = 169.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 21
+    end
+    object Label_SaveFile: TLabel
+      Position.X = 24.000000000000000000
+      Position.Y = 151.000000000000000000
+      Text = 'Label_SaveFile'
+      TabOrder = 22
+    end
+    object Label_SortResults: TLabel
+      Position.X = 24.000000000000000000
+      Position.Y = 407.000000000000000000
+      Text = 'Sort Results'
+      TabOrder = 23
+    end
+    object ComboBox_PaperIndex: TComboBox
+      Position.X = 24.000000000000000000
+      Position.Y = 576.000000000000000000
+      Size.Width = 169.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 24
+      OnChange = ComboBox_PaperIndexChange
+    end
+    object Label_PaperDetails: TLabel
+      Position.X = 24.000000000000000000
+      Position.Y = 551.000000000000000000
+      Text = 'Label_PaperDetails'
+      TabOrder = 25
+    end
+    object ComboBox_MaxPapers: TComboBox
+      Items.Strings = (
+        '30'
+        '100'
+        '200'
+        '500'
+        '1000')
+      Position.X = 24.000000000000000000
+      Position.Y = 494.000000000000000000
+      Size.Width = 169.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 26
+    end
   end
   object pnl1: TPanel
     Align = Client
-    Size.Width = 601.000000000000000000
+    Size.Width = 773.000000000000000000
     Size.Height = 766.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 2
@@ -85,27 +135,38 @@ object MainForm: TMainForm
       DataDetectorTypes = []
       Align = Bottom
       Position.Y = 494.000000000000000000
-      Size.Width = 601.000000000000000000
+      Size.Width = 773.000000000000000000
       Size.Height = 272.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
-      Viewport.Width = 597.000000000000000000
+      Viewport.Width = 769.000000000000000000
       Viewport.Height = 268.000000000000000000
     end
     object mmo_QueryKeyWords: TMemo
       Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
       DataDetectorTypes = []
       Lines.Strings = (
-        'Circuit Reverse Engineering ')
+        
+          '"netlist partitioning" OR "netlist analysis" OR "IC image analys' +
+          'is" OR "IC image segmentation" OR "IC delayering" OR'
+        
+          '"IC layout extraction" OR "FSM extraction" OR "netlist extractio' +
+          'n" OR "circuit reverse engineering" OR "netlist reverse'
+        
+          'engineering" OR "bitstream reverse engineering" OR "hardware rev' +
+          'erse engineering" OR "IC reverse engineering" OR'
+        
+          '"semiconductor reverse engineering" OR "FPGA reverse engineering' +
+          '"')
       Align = Top
       Margins.Top = 30.000000000000000000
       Position.Y = 30.000000000000000000
-      Size.Width = 601.000000000000000000
-      Size.Height = 57.000000000000000000
+      Size.Width = 773.000000000000000000
+      Size.Height = 75.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 2
-      Viewport.Width = 597.000000000000000000
-      Viewport.Height = 53.000000000000000000
+      Viewport.Width = 769.000000000000000000
+      Viewport.Height = 71.000000000000000000
     end
     object lbl1_SearchKeywords: TLabel
       Position.X = 8.000000000000000000
@@ -119,12 +180,12 @@ object MainForm: TMainForm
       ClipChildren = True
       Margins.Top = 5.000000000000000000
       Margins.Bottom = 5.000000000000000000
-      Size.Width = 601.000000000000000000
-      Size.Height = 397.000000000000000000
+      Size.Width = 773.000000000000000000
+      Size.Height = 379.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 5
-      Viewport.Width = 597.000000000000000000
-      Viewport.Height = 372.000000000000000000
+      Viewport.Width = 769.000000000000000000
+      Viewport.Height = 354.000000000000000000
     end
   end
 end
