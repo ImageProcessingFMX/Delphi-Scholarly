@@ -64,7 +64,7 @@ object MainForm: TMainForm
       TabOrder = 19
       Text = 'export as CSV'
     end
-    object EditFilename: TEdit
+    object EditResultsFilename: TEdit
       Touch.InteractiveGestures = [LongTap, DoubleTap]
       TabOrder = 20
       Text = 'c:\temp\papers.csv'
@@ -85,7 +85,7 @@ object MainForm: TMainForm
     object Label_SaveFile: TLabel
       Position.X = 24.000000000000000000
       Position.Y = 151.000000000000000000
-      Text = 'Label_SaveFile'
+      Text = 'Save Results File:'
       TabOrder = 22
     end
     object Label_SortResults: TLabel
@@ -106,7 +106,7 @@ object MainForm: TMainForm
     object Label_PaperDetails: TLabel
       Position.X = 24.000000000000000000
       Position.Y = 551.000000000000000000
-      Text = 'Label_PaperDetails'
+      Text = 'Paper Details  #'
       TabOrder = 25
     end
     object ComboBox_MaxPapers: TComboBox
@@ -117,11 +117,31 @@ object MainForm: TMainForm
         '500'
         '1000')
       Position.X = 24.000000000000000000
-      Position.Y = 494.000000000000000000
+      Position.Y = 505.000000000000000000
       Size.Width = 169.000000000000000000
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 26
+    end
+    object Label_QueryLimit: TLabel
+      Position.X = 24.000000000000000000
+      Position.Y = 480.000000000000000000
+      Text = 'OpenALEX Query Limit'
+      TabOrder = 27
+    end
+    object Label1: TLabel
+      StyledSettings = []
+      Position.X = 24.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 169.000000000000000000
+      Size.Height = 60.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Family = 'Comic Sans MS'
+      TextSettings.Font.Size = 30.000000000000000000
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      TextSettings.FontColor = claCrimson
+      Text = 'OpenALEX '
+      TabOrder = 28
     end
   end
   object pnl1: TPanel
@@ -145,19 +165,6 @@ object MainForm: TMainForm
     object mmo_QueryKeyWords: TMemo
       Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
       DataDetectorTypes = []
-      Lines.Strings = (
-        
-          '"netlist partitioning" OR "netlist analysis" OR "IC image analys' +
-          'is" OR "IC image segmentation" OR "IC delayering" OR'
-        
-          '"IC layout extraction" OR "FSM extraction" OR "netlist extractio' +
-          'n" OR "circuit reverse engineering" OR "netlist reverse'
-        
-          'engineering" OR "bitstream reverse engineering" OR "hardware rev' +
-          'erse engineering" OR "IC reverse engineering" OR'
-        
-          '"semiconductor reverse engineering" OR "FPGA reverse engineering' +
-          '"')
       Align = Top
       Margins.Top = 30.000000000000000000
       Position.Y = 30.000000000000000000

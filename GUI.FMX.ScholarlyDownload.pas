@@ -15,7 +15,22 @@ uses
   FMX.Edit, FMX.ListBox;
 
 const
-  MaxPApers = 2000;
+  MaxPapers = 2000;
+
+const
+  QueryKey1 = '"image segmentation" OR "image analysis" OR "feature extraction" OR "object detection" OR ' +
+              '"image classification" OR "semantic segmentation" OR "instance segmentation" OR ' +
+              '"edge detection" OR "image enhancement" OR "image restoration" OR ' +
+              '"computer vision" OR "convolutional neural network" OR "CNN image processing" OR ' +
+              '"deep learning image" OR "machine learning vision" OR "neural network segmentation" OR ' +
+              '"classical image processing" OR "digital image processing" OR "image filtering" OR ' +
+              '"morphological operations" OR "thresholding algorithms" OR "region growing" OR ' +
+              '"watershed segmentation" OR "template matching" OR "SIFT" OR "SURF" OR ' +
+              '"AI-based segmentation" OR "transformer vision" OR "U-Net" OR "ResNet" OR ' +
+              '"image recognition algorithms" OR "pattern recognition"';
+
+
+
 
 type
   TMainForm = class(TForm)
@@ -30,13 +45,15 @@ type
     chk_exportasJSON: TCheckBox;
     chk_exportasBIBTEX: TCheckBox;
     chk_exportasCSV: TCheckBox;
-    EditFilename: TEdit;
+    EditResultsFilename: TEdit;
     ComboBox_FilterResults: TComboBox;
     Label_SaveFile: TLabel;
     Label_SortResults: TLabel;
     ComboBox_PaperIndex: TComboBox;
     Label_PaperDetails: TLabel;
     ComboBox_MaxPapers: TComboBox;
+    Label_QueryLimit: TLabel;
+    Label1: TLabel;
     procedure CornerButton_DownloadClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -69,10 +86,11 @@ implementation
 
 function SetValidExtension(const Filename, NewExt: string): string;
 begin
-  if FileExists(Filename) then
+  if DirectoryExists(Filename) then
     Result := ChangeFileExt(Filename, NewExt)
   else
     Result := ChangeFileExt('C:\Temp\papers.csv', NewExt);
+
 end;
 
 procedure TMainForm.PrintPaperRecord(aPAper: TPaperRecord);
@@ -232,7 +250,7 @@ begin
 
   QueryStr := mmo_QueryKeyWords.Text;
 
-  FExportFilename := EditFilename.Text;
+  FExportFilename := EditResultsFilename.Text;
 
   // Get MaxPapers from UI with validation
   if not TryStrToInt(ComboBox_MaxPapers.Items[ComboBox_MaxPapers.ItemIndex],
@@ -364,6 +382,12 @@ begin
   ComboBox_FilterResults.OnChange := ComboBox_FilterResultsChange;
 
   FMaxPapers := 500;
+  ComboBox_MaxPapers.ItemIndex:= ComboBox_MaxPapers.Items.IndexOf('500');
+
+
+
+   mmo_QueryKeyWords.Lines.clear;
+mmo_QueryKeyWords.Lines.Add (  QueryKey2  );
 
 end;
 

@@ -1,11 +1,6 @@
 program Scholarly;
 
 uses
-  madExcept,
-  madLinkDisAsm,
-  madListHardware,
-  madListProcesses,
-  madListModules,
 
   System.StartUpCopy,
   FMX.Forms,
