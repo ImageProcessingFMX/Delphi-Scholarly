@@ -11,7 +11,7 @@ uses
   ///
   ///
   ///
-  Unit_TScholarly, Unit_StringGridHelper, System.Rtti, FMX.Grid.Style, FMX.Grid,
+  Unit_TScholarly, Unit_StringGridHelper, System.Rtti, FMX.Grid.Style, FMX.Grid, math,
   FMX.Edit, FMX.ListBox;
 
 const
@@ -29,8 +29,7 @@ const
               '"AI-based segmentation" OR "transformer vision" OR "U-Net" OR "ResNet" OR ' +
               '"image recognition algorithms" OR "pattern recognition"';
 
-
-
+  
 
 type
   TMainForm = class(TForm)
@@ -54,6 +53,7 @@ type
     ComboBox_MaxPapers: TComboBox;
     Label_QueryLimit: TLabel;
     Label1: TLabel;
+    ComboBox_MaxReference: TComboBox;
     procedure CornerButton_DownloadClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -85,12 +85,24 @@ implementation
 {$R *.fmx}
 
 function SetValidExtension(const Filename, NewExt: string): string;
+const
+  DefaultPath = 'C:\temp\papers\papers.csv';
+var
+  Dir: string;
 begin
-  if DirectoryExists(Filename) then
-    Result := ChangeFileExt(Filename, NewExt)
-  else
-    Result := ChangeFileExt('C:\Temp\papers.csv', NewExt);
+  // Wenn leer ? Standardpfad
+  if Trim(Filename) = '' then
+    Exit(ChangeFileExt(DefaultPath, NewExt));
 
+  // Ordner extrahieren
+  Dir := ExtractFileDir(Filename);
+
+  // Wenn Ordner nicht existiert ? Standardpfad
+  if not DirectoryExists(Dir) then
+    Exit(ChangeFileExt(DefaultPath, NewExt));
+
+  // Alles ok ? normalen Pfad verwenden
+  Result := ChangeFileExt(Filename, NewExt);
 end;
 
 procedure TMainForm.PrintPaperRecord(aPAper: TPaperRecord);
@@ -246,6 +258,7 @@ var
   QueryStr: String;
   FMinDelay: Integer;
   FMaxDelay: Integer;
+  FMaxReference : INteger;
 begin
 
   QueryStr := mmo_QueryKeyWords.Text;
@@ -299,7 +312,13 @@ begin
   end;
 
   // Resolve references between downloaded papers
-  FScholarly.DownloadReferencesForPapers(round(FMaxPapers / 3));
+  TryStrToInt(ComboBox_MaxPapers.Items[ComboBox_MaxPapers.ItemIndex], FMaxReference) ;
+
+  FMaxReference := Min ( FMaxReference,  FMaxPapers);
+
+  FMaxReference := Max ( FMaxReference,  0 );
+
+  FScholarly.DownloadReferencesForPapers( FMaxReference );
 
   // Load into grid ONLY if papers were downloaded
   if FScholarly.PaperList.Count > 0 then
@@ -381,10 +400,14 @@ begin
   // Connect event handler
   ComboBox_FilterResults.OnChange := ComboBox_FilterResultsChange;
 
-  FMaxPapers := 500;
-  ComboBox_MaxPapers.ItemIndex:= ComboBox_MaxPapers.Items.IndexOf('500');
 
+    ComboBox_MaxPapers.Items.AddStrings([ '30', '100', '200', '500', '1000','1500','2000' ]);
 
+    ComboBox_MaxReference.Items.AddStrings([ '30', '100', '200', '500', '1000' ]);
+
+    ComboBox_MaxPapers.ItemIndex:= ComboBox_MaxPapers.Items.IndexOf('500');
+
+    ComboBox_MaxReference.ItemIndex:= ComboBox_MaxPapers.Items.IndexOf('100');
 
    mmo_QueryKeyWords.Lines.clear;
 mmo_QueryKeyWords.Lines.Add (  QueryKey2  );

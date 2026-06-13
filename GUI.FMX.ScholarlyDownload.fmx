@@ -96,7 +96,7 @@ object MainForm: TMainForm
     end
     object ComboBox_PaperIndex: TComboBox
       Position.X = 24.000000000000000000
-      Position.Y = 576.000000000000000000
+      Position.Y = 624.000000000000000000
       Size.Width = 169.000000000000000000
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False
@@ -105,17 +105,11 @@ object MainForm: TMainForm
     end
     object Label_PaperDetails: TLabel
       Position.X = 24.000000000000000000
-      Position.Y = 551.000000000000000000
+      Position.Y = 591.000000000000000000
       Text = 'Paper Details  #'
       TabOrder = 25
     end
     object ComboBox_MaxPapers: TComboBox
-      Items.Strings = (
-        '30'
-        '100'
-        '200'
-        '500'
-        '1000')
       Position.X = 24.000000000000000000
       Position.Y = 505.000000000000000000
       Size.Width = 169.000000000000000000
@@ -142,6 +136,14 @@ object MainForm: TMainForm
       TextSettings.FontColor = claCrimson
       Text = 'OpenALEX '
       TabOrder = 28
+    end
+    object ComboBox_MaxReference: TComboBox
+      Position.X = 24.000000000000000000
+      Position.Y = 544.000000000000000000
+      Size.Width = 169.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 29
     end
   end
   object pnl1: TPanel
